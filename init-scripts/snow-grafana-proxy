@@ -1,0 +1,50 @@
+#!/bin/bash
+#
+# chkconfig: 35 90 12
+# description: snow-grafana-proxy daemon
+#
+# Get function from functions library
+. /etc/init.d/functions
+# Start the service FOO
+PROGRAM_NAME="snow-grafana-proxy"
+start() {
+(/usr/local/bin/snow-grafana-proxy.py & echo $! > /var/lock/subsys/$PROGRAM_NAME) 2>&1  | logger -t "$PROGRAM_NAME"  &
+ret=$?
+
+        echo -n $"$PROGRAM_NAME server startup"
+if [ $ret -eq 0 ]
+then
+success
+else
+failure
+fi
+
+        echo
+}
+# Restart the service FOO
+stop() {
+echo -n  $"$PROGRAM_NAME server stop"
+        killproc -p /var/lock/subsys/$PROGRAM_NAME
+        rm -f /var/lock/subsys/$PROGRAM_NAME
+        echo
+}
+### main logic ###
+case "$1" in
+  start)
+        start
+        ;;
+  stop)
+        stop
+        ;;
+  status)
+        status -p /var/lock/subsys/$PROGRAM_NAME $PROGRAM_NAME.py
+        ;;
+  restart|reload|condrestart)
+        stop
+        start
+        ;;
+  *)
+        echo $"Usage: $0 {start|stop|restart|reload|status}"
+        exit 1
+esac
+exit 0

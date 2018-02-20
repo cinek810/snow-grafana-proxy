@@ -6,3 +6,4 @@ This is a proxy-like service translating [grafana simplejson](https://github.com
 
 Configuration file is preatty self-explanatory. You just have to give the details like your ServiceNow instance URL, user and password allowed to access ServiceNow API and adjust the filter. If you your goal is to get information about incidents beeing "in-progress" in your assignemnt group just adjust the filter with appropriate value instead of "YOURASSIGNEMNTGROUP" used in the example snow-grafana-proxy.conf 
 
+If you'd like to learn more about 1st version of snow-grafana-proxy you can check my blog post: https://funinit.wordpress.com/2018/02/20/simple-integration-of-servicenow-and-grafana/

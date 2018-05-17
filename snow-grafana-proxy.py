@@ -36,7 +36,7 @@ def MakeSnowRequestHandler(url,snowAuth,snowFilter):
 			return person["result"]
 
 		def do_GET(self):
-			logging.info("GET"+slef.path)
+			logging.info("GET"+self.path)
 
 			if self.path=="/":
 				self._set_headers()

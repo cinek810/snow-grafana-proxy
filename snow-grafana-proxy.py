@@ -101,10 +101,14 @@ def MakeSnowRequestHandler(url,snowAuth,snowFilter):
 								queryReply[0]["rows"].append([ incident["number"],  self.knownUsers[incident["assigned_to"]["value"]] , incidents_description[incident["incident_state"]]])
 
 						except KeyError:
-							self.knownUsers[incident["assigned_to"]["value"]]=self._get_person_by_link(incident["assigned_to"]["link"])["last_name"]
-							logging.info("User"+self.knownUsers[incident["assigned_to"]["value"]]+" added to my cache")
-							queryReply[0]["rows"].append([ incident["number"],  self.knownUsers[incident["assigned_to"]["value"]], incidents_description[incident["incident_state"]]])
-					
+							try:
+								self.knownUsers[incident["assigned_to"]["value"]]=self._get_person_by_link(incident["assigned_to"]["link"])["last_name"]
+								logging.info("User"+self.knownUsers[incident["assigned_to"]["value"]]+" added to my cache")
+								queryReply[0]["rows"].append([ incident["number"],  self.knownUsers[incident["assigned_to"]["value"]], incidents_description[incident["incident_state"]]])
+							except:
+								queryReply[0]["rows"].append([ incident["number"],  "NN", incidents_description[incident["incident_state"]]])
+								logging.error("Unable to get user last_name, I've got:",self._get_person_by_link(incident["assigned_to"]["link"]))
+						
 					queryReply[0]["type"]="table"
 					self.lastQueryReply[1]=queryReply
 					self.lastQueryReply[0]=now
@@ -135,6 +139,7 @@ if __name__ == "__main__":
 	config.read('/etc/snow-grafana-proxy.conf')
 	port=int(config['service']['port'])
 	logging.basicConfig(filename=config['service']['logfile'],level=getattr(logging,config['service']['loglevel'].upper()))
+	logging.info("My loglevel is:"+config['service']['loglevel'])
 	
 	run(port=int(config['service']['port']),address=config['service']['address'],handler_class=MakeSnowRequestHandler(url=config['service-now']['url'],snowAuth=(config['service-now']['user'],config['service-now']['password']),snowFilter=config['service-now']['filter']) )
 	logging.shutdown()

@@ -31,6 +31,7 @@ def MakeSnowRequestHandler(url,snowAuth,snowFilter):
 			snow.headers.update({"Accept": "application/json"})
 			snow.auth=self.snowAuth
 			r=snow.get(link)
+			logging.debug("_get_person_by_name: Results from: '"+str(link)+"' show:"+str(json.dumps(r.json(),indent=4)));
 			
 			person=r.json()
 			return person["result"]

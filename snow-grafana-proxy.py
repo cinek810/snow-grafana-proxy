@@ -11,7 +11,7 @@ import logging
 
 def MakeSnowRequestHandler(snowParams):
 	class SnowRequestsHandler(BaseHTTPRequestHandler,object):
-		knownUsers={}
+		get_attr_by_link_cache={}
 		lastQueryReply={}
 	        
 		def __init__(self,*args,**kwargs): #url, snowAuth,snowFilter):
@@ -28,22 +28,53 @@ def MakeSnowRequestHandler(snowParams):
 			self.send_header('Content-type','application/json')
 			self.end_headers()
 
-		def _get_person_by_link(self,link):
+		def _get_attr_by_link(self,attribute,interParams):
 			snow=requests.Session()
 			snow.headers.update({"Accept": "application/json"})
 			snow.auth=self.snowAuth
-			r=snow.get(link)
-			logging.debug("_get_person_by_name: Results from: '"+str(link)+"' show:"+str(json.dumps(r.json(),indent=4)));
+
+			try:
+				link=attribute["link"]
+			except:
+				try:
+					returnValue=interParams["default"]
+					logging.warning("Unable to get link. If it happens for all requests, this may mean that you're using incorrect interpreter for this attribute. Returning default value.: "+str(attribute))
+					return returnValue
+				except:
+					raise ValueError("Check your configuration of interpreterParameters. It should contain default value")
+			try:
+				attr=interParams["linkAttribute"]
+			except:
+				raise ValueError("Check your configuration of intepreterParameters. linkAttribute is missing or corrupted")
+
+			try:
+				returnValue=self.get_attr_by_link_cache[link][attr]
+			except KeyError:
+				logging.debug("Link missing in cache. I have:"+str(self.get_attr_by_link_cache))
+				try:
+					r=snow.get(attribute["link"])
+					logging.debug("_get_person_by_name: Results from: '"+str(attribute)+"' show:"+str(json.dumps(r.json(),indent=4)));
+					resultJSON=r.json()
+					returnValue=resultJSON["result"][attr]
+				except KeyError as e:
+					try:
+						logging.warning("Using default value for mapping, error"+str(e)+". Attribute was="+str(attribute))
+						returnValue=interParams["default"]
+					except KeyError:
+						raise ValueError("Check your configuration interpreterParameters should contain default value")
+
+			temp={}
+			temp[attr]=returnValue
+			self.get_attr_by_link_cache[link]=temp
 			
-			person=r.json()
-			return person["result"]
+			return returnValue
 		def __get_row(self,attributes,dataRow):
 			resultRow=[]
 			for attribute in attributes:
 				if attribute["interpreter"] == "none":
 					toAdd=dataRow[attribute["name"]]
-				elif attribute["interpreter"] == "person_by_link":
-					toAdd=self._get_person_by_link(dataRow[attribute["name"]]["link"])
+				elif attribute["interpreter"] == "object_attr_by_link":
+					toAdd=self._get_attr_by_link(dataRow[attribute["name"]],attribute["interpreterParams"]);
 				elif attribute["interpreter"] == "map":
 					toAdd=attribute["map"][dataRow[attribute["name"]]]
 				else:
@@ -88,7 +119,6 @@ def MakeSnowRequestHandler(snowParams):
 				target=self.queries[target_name]
 				logging.debug("My query target is:"+str(target))
 
-				incidents_description= { "1": "New" , "2": "Assigned", "3": "In progress", "12": "Referred", "4": "Await User", "5": "Await Evidance", "10": "Await Change", "8": "Await Vendor", "11": "Await Vendor Change", "6": "Resolved", "7": "Closed"}
 				self._set_headers()
 
 				
@@ -103,7 +133,8 @@ def MakeSnowRequestHandler(snowParams):
 					logging.debug("My snow filter is:"+target["snowFilter"])
 
 					snow.verify=False
-					r=snow.get(self.snowUrl+"//api/now/table/incident",params=target["snowFilter"])
+					r=snow.get(self.snowUrl+"//api/now/table/"+target["table"],params=target["snowFilter"])
+					items=r.json()
 
 
 					if r.status_code == 401:
@@ -112,12 +143,14 @@ def MakeSnowRequestHandler(snowParams):
 					elif r.text == "":
 						logging.warning("Empty reply from service-now instance")
 						return
+					elif r.status_code == 400:
+						logging.error("Bad request, service-now returned:"+items["error"]["message"])
+						return
 				
 					print r.text	
-					items=r.json()
 
 		
-					logging.debug("Results from service-now in json format:"+json.dumps(items,indent=4,sort_keys=True))
+					logging.debug("Service-now returned "+ str(r.status_code)+" message in json format:"+json.dumps(items,indent=4,sort_keys=True))
 
 					#queryReply[0]["columns"]=[{"text": "Number", "type": "string"}, {"text": "Short description", "type": "string"},{"text": "Last update by", "type": "string"}]
 					queryReply[0]["columns"]=[{"text": "Number", "type": "string"}, {"text": "Assigned to", "type": "string"}, { "text": "Incident state", "type": "string"}]

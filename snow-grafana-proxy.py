@@ -133,6 +133,7 @@ def MakeSnowRequestHandler(snowParams):
 					logging.debug("My snow filter is:"+target["snowFilter"])
 
 					snow.verify=False
+					logging.info("Starting request to service-now, to "+str(self.snowUrl+"//api/now/table/"+target["table"]+" params="+target["snowFilter"]))
 					r=snow.get(self.snowUrl+"//api/now/table/"+target["table"],params=target["snowFilter"])
 					items=r.json()
 
@@ -153,27 +154,14 @@ def MakeSnowRequestHandler(snowParams):
 					logging.debug("Service-now returned "+ str(r.status_code)+" message in json format:"+json.dumps(items,indent=4,sort_keys=True))
 
 					#queryReply[0]["columns"]=[{"text": "Number", "type": "string"}, {"text": "Short description", "type": "string"},{"text": "Last update by", "type": "string"}]
-					queryReply[0]["columns"]=[{"text": "Number", "type": "string"}, {"text": "Assigned to", "type": "string"}, { "text": "Incident state", "type": "string"}]
+					queryReply[0]["columns"]=[]
+					for attr in target["attributes"]:
+						queryReply[0]["columns"].append({"text": attr["displayName"], "type": "string"})
 					queryReply[0]["rows"]=[]
 					for row in items["result"]:
 						oneResultRow=self.__get_row(target["attributes"],row)
 						queryReply[0]["rows"].append(oneResultRow)
-#						try:			
-#						
-#							if(incident["assigned_to"]==""):
-#								queryReply[0]["rows"].append([ incident["number"], "unassigned" , incidents_description[incident["incident_state"]]] )
-#							else:
-#								queryReply[0]["rows"].append([ incident["number"],  self.knownUsers[incident["assigned_to"]["value"]] , incidents_description[incident["incident_state"]]])
-#
-#						except KeyError:
-#							try:
-#								self.knownUsers[incident["assigned_to"]["value"]]=self._get_person_by_link(incident["assigned_to"]["link"])["last_name"]
-#								logging.info("User"+self.knownUsers[incident["assigned_to"]["value"]]+" added to my cache")
-#								queryReply[0]["rows"].append([ incident["number"],  self.knownUsers[incident["assigned_to"]["value"]], incidents_description[incident["incident_state"]]])
-#							except:
-#								queryReply[0]["rows"].append([ incident["number"],  "NN", incidents_description[incident["incident_state"]]])
-#								logging.error("Unable to get user last_name, I've got:",self._get_person_by_link(incident["assigned_to"]["link"]))
-#						
+						
 					queryReply[0]["type"]="table"
 					self.lastQueryReply[target_name]["reply"]=queryReply
 					self.lastQueryReply[target_name]["time"]=now

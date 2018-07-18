@@ -39,6 +39,8 @@ Use map disctionary defined or attribute and send corresponding values assuming 
 Assumes that for this attribute service-now API returns value/link pair. In this case additional lookup to link is required to get really meaningful data. This interpreter requires additional parameters specified in interpreterParameters dictionary, for instance:  ```interpreterParams: { linkAttribute: "name", default: "FailedToGetName"}``` will get the value of name returned from the link from previous call in case of failure returning the value "FailedToGetName". Default value is important since sometimes the value is realy undefined - like assignemnt group for un assigned incident.
 
 # Changelog
+17-07-2018
+beta release of second version commited. It allows much more flexible configuration, getting data from any service-now table and arbitrary set of attributes.
 
 15-03-2018
 Use logging instead of dirty print.

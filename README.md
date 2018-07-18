@@ -8,6 +8,36 @@ Configuration file is preatty self-explanatory. You just have to give the detail
 
 If you'd like to learn more about 1st version of snow-grafana-proxy you can check my blog post: https://funinit.wordpress.com/2018/02/20/simple-integration-of-servicenow-and-grafana/
 
+# Runtime options
+snow-grafana-proxy.py accepts two options, as explained by help:
+
+```# ./snow-grafana-proxy.py --help
+usage: snow-grafana-proxy.py [-h] [-c CONFIGFILE] [-d]
+
+Simple JSON data source for grafana retreving data from service-now
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -c CONFIGFILE, --configFile CONFIGFILE
+                        Configuration file to use
+  -d, --debug           Start in foreground and print all logs to stdout
+```
+
+# Configuration file
+Current configuration file schema is in YAML format with two basic dictionaries: "service" and "service-now". In service dictionary you define parameters of your snow-grafana-proxy service like address to bind, port, log level and file to log output. In "service-now" section we have basic parameters like service-now instance address, api user and password for simple authntication and queries dictionary. 
+
+## Queries configuration
+Each query will appear as separate option available under metrics configuration in grafana(remember to pick table time, not timeseries from the first list). Query will use service-now table API to get the information from configured table, using value of a snowFilter option as an argument allowing to filter results on snow side. snow-grafana-proxy will forward to grafana only parameters listed in attributes list. For some attributes to make them more meaning ful there is a need to use an interpreter, currently supported interpreters are:
+
+### none
+Simply return value of attribute specified as in "name" argumnet.
+
+### map
+Use map disctionary defined or attribute and send corresponding values assuming that service-now returned value is a key for map dictionary, 
+
+### object_attr_by_link
+Assumes that for this attribute service-now API returns value/link pair. In this case additional lookup to link is required to get really meaningful data. This interpreter requires additional parameters specified in interpreterParameters dictionary, for instance:  ```interpreterParams: { linkAttribute: "name", default: "FailedToGetName"}``` will get the value of name returned from the link from previous call in case of failure returning the value "FailedToGetName". Default value is important since sometimes the value is realy undefined - like assignemnt group for un assigned incident.
+
 # Changelog
 
 15-03-2018

@@ -148,7 +148,6 @@ def MakeSnowRequestHandler(snowParams):
 						logging.error("Bad request, service-now returned:"+items["error"]["message"])
 						return
 				
-					print r.text	
 
 		
 					logging.debug("Service-now returned "+ str(r.status_code)+" message in json format:"+json.dumps(items,indent=4,sort_keys=True))
@@ -178,8 +177,11 @@ def MakeSnowRequestHandler(snowParams):
 	return SnowRequestsHandler				
 			
 
+import signal
+def shutdown(signum, frame):  # signum and frame are mandatory
+    sys.exit(0)
 
-def run( handler_class, server_class=HTTPServer,port=8095,address='127.0.0.1'):
+def run( handler_class, server_class=HTTPServer,port=8095,address='127.0.0.1',foreground=False):
 	server_address = (address,port)
 	httpd= server_class(server_address,handler_class)
 	logging.info("Starting grafana simple json to snow proxy server")
@@ -202,11 +204,16 @@ if __name__ == "__main__":
 	port=int(config['service']['port'])
 	if args.debugMode==True:
 		logging.basicConfig(stream=sys.stdout,level=logging.DEBUG)
+		logging.info("My loglevel is:"+config['service']['loglevel'])
+		run(port=int(config['service']['port']),address=config['service']['address'],handler_class=MakeSnowRequestHandler(config['service-now']))
 	else:
 		logging.basicConfig(filename=config['service']['logfile'],level=getattr(logging,config['service']['loglevel'].upper()))
-	logging.info("My loglevel is:"+config['service']['loglevel'])
+		logging.info("My loglevel is:"+config['service']['loglevel'])
+		import daemon
+		print("Starting in daemon mode...")
+		with daemon.DaemonContext(signal_map={   signal.SIGTERM: shutdown,   signal.SIGTSTP: shutdown }):
+			run(port=int(config['service']['port']),address=config['service']['address'],handler_class=MakeSnowRequestHandler(config['service-now']))
 	
-	run(port=int(config['service']['port']),address=config['service']['address'],handler_class=MakeSnowRequestHandler(config['service-now']))
 	logging.shutdown()
 
 

@@ -4,7 +4,7 @@
 
 This is a proxy-like service translating [grafana simplejson](https://github.com/grafana/simple-json-datasource)  data source calls into calls to [ServiceNow](https://www.servicenow.com/) REST API getting the items from incident table. Effectively allowing allowing integration of grafana dashboard with ServiceNow.  
 
-Configuration file is preatty self-explanatory. You just have to give the details like your ServiceNow instance URL, user and password allowed to access ServiceNow API and adjust the filter. If you your goal is to get information about incidents beeing "in-progress" in your assignemnt group just adjust the filter with appropriate value instead of "YOURASSIGNEMNTGROUP" used in the example snow-grafana-proxy.conf 
+Configuration file is preatty self-explanatory. You just have to give the details like your ServiceNow instance URL, user and password allowed to access ServiceNow API and configure queries you'd like to make available for grafana. If you want you can find some "explanation" of those options on my blog post: https://funinit.wordpress.com/2018/07/20/integration-for-servicenow-table-api-and-grafana/
 
 If you'd like to learn more about 1st version of snow-grafana-proxy you can check my blog post: https://funinit.wordpress.com/2018/02/20/simple-integration-of-servicenow-and-grafana/
 

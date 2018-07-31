@@ -16,6 +16,7 @@ queries={ "get_my_incidents":
 
 snowAuth=(("admin","pass"))
 snowUrl="https://dev67310.service-now.com/"
+snowAuth=(("admin","HlO7vgrUWXk5miSZ"))
 
 #def _set_headers(self):
 #	self.send_response(200)
@@ -135,8 +136,7 @@ def query_post(received,context):
 		queryReply[0]["rows"].append(oneResultRow)
 		
 	queryReply[0]["type"]="table"
-	lastQueryReply[target_name]["reply"]=queryReply
-	lastQueryReply[target_name]["time"]=now
+	return queryReply
 
 
 if __name__ == "__main__":

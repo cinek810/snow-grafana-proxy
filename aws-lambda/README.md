@@ -59,7 +59,7 @@ $LATEST	200
 ```
 
 # List of links
-[1] https://funinit.wordpress.com/2018/07/20/integration-for-servicenow-table-api-and-grafana/
-[2] https://funinit.wordpress.com/2018/02/20/simple-integration-of-servicenow-and-grafana/
-[3] https://docs.aws.amazon.com/lambda/latest/dg/with-s3-example-deployment-pkg.html#with-s3-example-deployment-pkg-python
-[4] https://aws.amazon.com/documentation/cli/
+[1] https://funinit.wordpress.com/2018/07/20/integration-for-servicenow-table-api-and-grafana/ \
+[2] https://funinit.wordpress.com/2018/02/20/simple-integration-of-servicenow-and-grafana/ \
+[3] https://docs.aws.amazon.com/lambda/latest/dg/with-s3-example-deployment-pkg.html#with-s3-example-deployment-pkg-python \
+[4] https://aws.amazon.com/documentation/cli/ \ 

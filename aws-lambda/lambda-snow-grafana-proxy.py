@@ -16,7 +16,6 @@ queries={ "get_my_incidents":
 
 snowAuth=(("admin","pass"))
 snowUrl="https://dev67310.service-now.com/"
-snowAuth=(("admin","HlO7vgrUWXk5miSZ"))
 
 #def _set_headers(self):
 #	self.send_response(200)

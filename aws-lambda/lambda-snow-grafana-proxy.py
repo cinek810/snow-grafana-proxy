@@ -1,8 +1,6 @@
 #!/usr/bin/python36
-#from botocore.vendored import requests
-import requests
-import json
-import logging
+from botocore.vendored import requests
+import json,logging
 
 queries={ "get_my_incidents": 
    { "table": "incident", 

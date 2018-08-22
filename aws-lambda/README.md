@@ -2,6 +2,8 @@
 
 This version is really simplified, the configuration is hard-coded so you have to build your own Lambda package before publishing/using it. If you have any interest in making it more comfortable - let me know or (preferable) create a merge request with appropriate changes. If your ServiceNow instance replies slowly to API requqests  AWS Lambda may not be the best choice for you - **you'll pay for execution time wich includes the time you'll wait for SerciceNow replies**
 
+If you're interested in my lesson learned from this subproject, you may want to check my [blog post](https://wordpress.com/post/funinit.wordpress.com/692)
+
 ## How to make it running
 ### Update configuration 
 On top of `lambda-snow-grafana-proxy.py` you'll see:

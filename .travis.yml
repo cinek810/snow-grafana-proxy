@@ -7,10 +7,8 @@ jobs:
   - stage: displayHelp
     script: ./snow-grafana-proxy.py --help
     python:
-     - "2.6"
      - "3.6"
   - stage: startService
     script: ./snow-grafana-proxy.py -c ./etc/snow-grafana-proxy.conf
     python:
-     - "2.6"
      - "3.6"

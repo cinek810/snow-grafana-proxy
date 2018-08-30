@@ -1,0 +1,4 @@
+pyton-daemon
+json
+requests
+logging

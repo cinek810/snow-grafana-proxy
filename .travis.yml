@@ -1,4 +1,6 @@
 language: python
+sudo: enabled
+install: sudo pip install -r requirements.txt
 stages:
  - test
  - displayHelp

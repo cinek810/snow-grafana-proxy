@@ -11,4 +11,6 @@ jobs:
   - stage: startService
     script: ./snow-grafana-proxy.py -c ./etc/snow-grafana-proxy.conf
     python:
+     - "2.7"
+     - "3.5"
      - "3.6"

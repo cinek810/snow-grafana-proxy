@@ -1,4 +1,4 @@
-pyton-daemon
+python-daemon
 json
 requests
 logging

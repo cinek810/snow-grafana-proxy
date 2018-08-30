@@ -10,4 +10,4 @@ jobs:
   - stage: displayHelp
     script: ./snow-grafana-proxy.py --help
   - stage: startService
-    script: ./snow-grafana-proxy.py
+    script: ./snow-grafana-proxy.py -c ./etc/snow-grafana-proxy.conf

@@ -1,2 +1,2 @@
-daemon
+python-daemon
 requests

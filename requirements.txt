@@ -1,3 +1,2 @@
 python-daemon
-py_daemon
 requests

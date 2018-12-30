@@ -1,0 +1,3 @@
+python-daemon
+pyyaml
+requests

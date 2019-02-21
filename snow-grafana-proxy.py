@@ -91,7 +91,7 @@ def MakeSnowRequestHandler(snowParams):
                 elif attribute["interpreter"] == "object_attr_by_link":
                     toAdd = self._get_attr_by_link(dataRow[attribute["name"]], attribute["interpreterParams"])
                 elif attribute["interpreter"] == "map":
-                    toAdd = attribute["map"][dataRow[attribute["name"]]]
+                    toAdd = attribute["map"].get(dataRow[attribute["name"]], attribute["name"])
                 else:
                     raise ValueError('Unsupported interpreter ' + str(attribute["interpreter"]))
                 resultRow.append(toAdd)

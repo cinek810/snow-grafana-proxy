@@ -30,6 +30,8 @@ def MakeSnowRequestHandler(snowParams):
         def __init__(self, *args, **kwargs):  # url, snowAuth, snowFilter):
             self.snowUrl = snowParams["instance"]["url"]
             self.snowAuth = (snowParams["instance"]["user"], snowParams["instance"]["password"])
+            # by default verify SSL
+            self.snowVerifySsl = snowParams["instance"].get("verifySSL", True)
             self.queries = snowParams["queries"]
             for k, v in self.queries.iteritems():
                 self.lastQueryReply[k] = dict(time=0)
@@ -138,10 +140,10 @@ def MakeSnowRequestHandler(snowParams):
                     # cache is too old - do new request to service-now
                     snow = requests.Session()
                     snow.headers.update({"Accept": "application/json"})
+                    snow.verify = self.snowVerifySsl
                     snow.auth = self.snowAuth
                     logging.debug("My snow filter is:" + target["snowFilter"])
 
-                    snow.verify = False
                     logging.info("Starting request to service-now, to " + str(self.snowUrl + "//api/now/table/" + target["table"] + " params=" + target["snowFilter"]))
                     r = snow.get(self.snowUrl + "//api/now/table/" + target["table"], params=target["snowFilter"])
                     items = r.json()

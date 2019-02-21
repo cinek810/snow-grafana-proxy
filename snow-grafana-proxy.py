@@ -126,6 +126,7 @@ def MakeSnowRequestHandler(snowParams):
 
             elif self.path == '/query':
                 target_name = received["targets"][0]["target"]
+                target_type = received["targets"][0]["type"]
                 target = self.queries[target_name]
                 logging.debug("My query target is:" + str(target))
 
@@ -134,8 +135,7 @@ def MakeSnowRequestHandler(snowParams):
                 now = calendar.timegm(time.gmtime())
                 queryReply = [{}]
                 if (now - self.lastQueryReply[target_name]["time"] > target["cacheTime"]):
-
-                    # ---------------- Do request to service-now ----------------
+                    # cache is too old - do new request to service-now
                     snow = requests.Session()
                     snow.headers.update({"Accept": "application/json"})
                     snow.auth = self.snowAuth
@@ -155,7 +155,6 @@ def MakeSnowRequestHandler(snowParams):
                     elif r.status_code == 400:
                         logging.error("Bad request, service-now returned:" + items["error"]["message"])
                         return
-
                     # ---------------- Request to service-now done ----------------
                     logging.debug("Service-now returned " + str(r.status_code) + " message in json format:" + json.dumps(items, indent=4, sort_keys=True))
 
@@ -168,16 +167,30 @@ def MakeSnowRequestHandler(snowParams):
                         oneResultRow = self.__get_row(target["attributes"], row)
                         queryReply[0]["rows"].append(oneResultRow)
 
-                    queryReply[0]["type"] = "table"
                     self.lastQueryReply[target_name]["reply"] = queryReply
                     self.lastQueryReply[target_name]["time"] = now
                 else:
+                    # load from cache
                     queryReply = self.lastQueryReply[target_name]["reply"]
                     cacheAge = now - self.lastQueryReply[target_name]["time"]
                     logging.info("Reply from cache - " + str(cacheAge) + " seconds old")
-                queryReply = json.dumps(queryReply)
-                logging.debug("Reply to grafana:" + queryReply)
 
+                # set table/timeserie as per query - not cached
+                queryReply[0]["type"] = target_type
+
+                # for timeserie convert to single record with count of rows timestamped as now
+                if target_type == "timeserie":
+                    queryReply[0]["target"] = target_name
+                    # convert now to ns precision
+                    queryReply[0]["datapoints"] = [[len(queryReply[0]["rows"]), now * 1000]]
+                    # save some bandwidth - delete unnecessary data
+                    del queryReply[0]["columns"]
+                    del queryReply[0]["rows"]
+
+                # prepare data - convert python object to json
+                queryReply = json.dumps(queryReply)
+
+                logging.debug("Reply to grafana:" + queryReply)
                 self.wfile.write(queryReply)
 
     return SnowRequestsHandler

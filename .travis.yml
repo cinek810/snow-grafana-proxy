@@ -17,7 +17,7 @@ python:
 jobs:
  include:
   - stage: runPEP8
-    script: pycodestyle ./snow-grafana-proxy.py
+    script: pycodestyle --ignore=E501,E722 ./snow-grafana-proxy.py
     python:
      - "3.6"
      - "2.7"

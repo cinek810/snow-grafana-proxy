@@ -1,8 +1,11 @@
 language: python
 sudo: enabled
-install: sudo pip install -r requirements.txt
+install: 
+ - sudo pip install -r requirements.txt
+ - sudo pip install pycodestyle
 stages:
  - test
+ - runPEP8
  - displayHelp
  - startService
 script: ./snow-grafana-proxy.py -c ./etc/snow-grafana-proxy.conf
@@ -13,6 +16,11 @@ python:
 
 jobs:
  include:
+  - stage: runPEP8
+    script: pycodestyle ./snow-grafana-proxy.py
+    python:
+     - "3.6"
+     - "2.7"
   - stage: displayHelp
     script: ./snow-grafana-proxy.py --help
     python:

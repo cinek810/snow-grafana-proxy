@@ -1,3 +1,8 @@
+<a href="https://scan.coverity.com/projects/cinek810-snow-grafana-proxy">
+  <img alt="Coverity Scan Build Status"
+       src="https://scan.coverity.com/projects/18331/badge.svg"/>
+</a>
+
 # snow-grafana-proxy
 
 ![Connections schema](https://raw.githubusercontent.com/cinek810/snow-grafana-proxy/master/docs/grafana-snow-proxy.svg?sanitize=true)

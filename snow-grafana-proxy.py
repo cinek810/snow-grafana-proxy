@@ -3,7 +3,6 @@
 import requests
 import json
 import time
-import calendar
 import logging
 import signal
 
@@ -201,15 +200,14 @@ def MakeSnowRequestHandler(snowParams):
                     oneResultRow = self.__get_row(target["attributes"], row)
                     queryReply[0]["rows"].append(oneResultRow)
 
-                # set table/timeserie as per query - not cached
+                # set table/timeseries as per query - not cached
                 queryReply[0]["type"] = target_type
 
-                # for timeserie convert to single record with count of rows timestamped as now
-                if target_type == "timeserie":
+                # for timeseries convert to single record with count of rows timestamped as now
+                if target_type == "timeseries":
                     queryReply[0]["target"] = target_name
                     # convert now to ns precision
-                    now = calendar.timegm(time.gmtime())
-                    queryReply[0]["datapoints"] = [[len(queryReply[0]["rows"]), now * 1000]]
+                    queryReply[0]["datapoints"] = [[len(queryReply[0]["rows"]), time.time() * 1000]]
                     # save some bandwidth - delete unnecessary data
                     del queryReply[0]["columns"]
                     del queryReply[0]["rows"]

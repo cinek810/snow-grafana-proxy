@@ -1,3 +1,4 @@
 python-daemon
 requests
 pyyaml
+jinja2

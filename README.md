@@ -28,6 +28,10 @@ optional arguments:
   -d, --debug           Start in foreground and print all logs to stdout
 ```
 
+## Commercial support and feature development
+
+Snow grafana proxy is distributed under MIT license, however, if anyone is interested in getting a commercial support model or sponsoring a certain feature development for ServiceNow and grafana integration proxy please contact [Snow-grafana-proxy support](mailto:stolarek.marcin@gmail.com?subject=[SnowGrafanaProxySupport]%20Support%20question)
+
 # Configuration file
 Current configuration file schema is in YAML format with two basic dictionaries: "service" and "service-now". In service dictionary you define parameters of your snow-grafana-proxy service like address to bind, port, log level and file to log output. In "service-now" section we have basic parameters like service-now instance address, api user and password for simple authntication and queries dictionary. 
 

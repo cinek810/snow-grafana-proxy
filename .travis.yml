@@ -1,53 +1,46 @@
 language: python
 sudo: enabled
-install: 
- - sudo pip install -r requirements.txt
- - sudo pip install pycodestyle
+install:
+- sudo pip install -r requirements.txt
+- sudo pip install pycodestyle
 stages:
- - test
- - runPEP8
- - displayHelp
- - startService
-
+- test
+- runPEP8
+- displayHelp
+- startService
 env:
   global:
-   # The next declaration is the encrypted COVERITY_SCAN_TOKEN, created
-   # via the "travis encrypt" command using the project repo's public key
-   - secure: "Rj+3OAa6cTEPzm6Se507f+HWUOAB1hEHuhJGtiZohDqa82zEngdP7NzIhiyyy5TsWDuDPDZQ2bVqICWBtBl6eDkic+2kQxOQbo2TxzNA4jkgAIex7JtO0CYs0YXFVk2OVAXZYyVuiDMB/dqVIVbt9RS1lQ/5kBIaDOE9DC50zSEfe7OZpkHKuQkWrcCNV0mGncxWeZlmrKfiRYE4vzRwxJgywP6iDrd4RV1um1BQaWnHe9k1kkOPHCYGNWe/B+nn/Kqu9PfDWzIERZwoyQ6v2s7FmOLB7py48dUqLEV4b06SdThd62KJ2Lt7ubQMcrh/sKZUN6DGENzMw+cYdf+1NoBWu8Vq8s76JeSzvRkqMjsYq8RuXlARSkNnps+Hj01j96Xj1U4tZxQGISUEoscXUOHMur5/nyx/9L8u5rqyIF5X9uFZhr38izrBrfAEtSH8Ng4gSUSwT5NBIb0kRDL8n2VwqAe1a3Ei/vtFIs9KcMDMAtp6cXVwUK9PfZR+W7UUpTH5DUi4gTp03dVtLh9x2Q9RzyB+qiXjlCx8vGoZo1RMcTZjFihreMeEJIyc758IQqvSLknK0ip1Hxsv3NkA5LDcf8sTWiBskjUiN8a1NJhufTvMyinmvIXmzR5VRTyqOH63k5NDlVlH43clP6b3FQLiuTn4Xi5VIeNK+qyMoGs="
-
+  - secure: Rj+3OAa6cTEPzm6Se507f+HWUOAB1hEHuhJGtiZohDqa82zEngdP7NzIhiyyy5TsWDuDPDZQ2bVqICWBtBl6eDkic+2kQxOQbo2TxzNA4jkgAIex7JtO0CYs0YXFVk2OVAXZYyVuiDMB/dqVIVbt9RS1lQ/5kBIaDOE9DC50zSEfe7OZpkHKuQkWrcCNV0mGncxWeZlmrKfiRYE4vzRwxJgywP6iDrd4RV1um1BQaWnHe9k1kkOPHCYGNWe/B+nn/Kqu9PfDWzIERZwoyQ6v2s7FmOLB7py48dUqLEV4b06SdThd62KJ2Lt7ubQMcrh/sKZUN6DGENzMw+cYdf+1NoBWu8Vq8s76JeSzvRkqMjsYq8RuXlARSkNnps+Hj01j96Xj1U4tZxQGISUEoscXUOHMur5/nyx/9L8u5rqyIF5X9uFZhr38izrBrfAEtSH8Ng4gSUSwT5NBIb0kRDL8n2VwqAe1a3Ei/vtFIs9KcMDMAtp6cXVwUK9PfZR+W7UUpTH5DUi4gTp03dVtLh9x2Q9RzyB+qiXjlCx8vGoZo1RMcTZjFihreMeEJIyc758IQqvSLknK0ip1Hxsv3NkA5LDcf8sTWiBskjUiN8a1NJhufTvMyinmvIXmzR5VRTyqOH63k5NDlVlH43clP6b3FQLiuTn4Xi5VIeNK+qyMoGs=
+  - secure: Id0twQH9quOP2k2VkZ5KLtUSILjUqu7qtZtsHmF4HYwAaLsufqzl9cbl+y2+SVLJFcitAbeF49VHbsyasav72bdgUe1fGr8a1EtniUonKjuPwty7iwt4SIVTZ0s+Lk5wrolzf+EVC9yBR+MP/IfdKV19wfQkwFXwym6cWTUyjaRvrbgzvyI04MUM+cWKm2tGQjFL55A1oL4mttpA8G/owrfIq8WOJ9cry1du0GKWAim5tjsTJbE7/H6DiBtKEKnjpum0oviyAYXTmFnA97X+55UWa2+9jDFTYk4k/Dzoo31cYjOQI/+qby3x5fOdWlJWwhJFlS8rCx1TJkDnkLD1yKvR1ebbG7zC9PO1Tiq84QGL/DNpifGhVb7chauJRZPtaoGooq+/iQI0WHTkHkch8JLm+Cesqsyfol5JojeffKY4d/vPwl2iCWAVUCul62W00a62AG3yj5Hj80hYT3r+pcjV4wkGRCbgig43QwUXpC78c9TH1V6OQEseLaNAc337au4ouPLtURB3+Oe9Z4klxAra63JhACTPjyb3XmPyi9V8FYtQ2Vb7oUiQ65B4w/PuHvL53ORbuIvA0K+adLkOSQQvOBv8RSbmX58Ca7Bv40eDrngo3v7k8ukmnnZPvw9Z1muBNpkz2KD79DhQHDKJDdU/p8h6AgsKovKxLZivFus=
 before_install:
-  - echo -n | openssl s_client -connect https://scan.coverity.com:443 | sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' | sudo tee -a /etc/ssl/certs/ca-
-
+- echo -n | openssl s_client -connect https://scan.coverity.com:443 | sed -ne '/-BEGIN
+  CERTIFICATE-/,/-END CERTIFICATE-/p' | sudo tee -a /etc/ssl/certs/ca-
 addons:
   coverity_scan:
     project:
-      name: "cinek810/snow-grafana-proxy"
-      description: "Grafana and ServiceNow connector"
+      name: cinek810/snow-grafana-proxy
+      description: Grafana and ServiceNow connector
     notification_email: stolarek.marcin@gmail.com
     branch_pattern: master
-
-script: ./snow-grafana-proxy.py -c ./etc/snow-grafana-proxy.conf
+script: "./snow-grafana-proxy.py -c ./etc/snow-grafana-proxy.conf"
 python:
- - "2.7"
- - "3.5"
- - "3.6"
-
+- '2.7'
+- '3.5'
+- '3.6'
 jobs:
- include:
+  include:
   - stage: runPEP8
     script: pycodestyle --ignore=E501,E722 ./snow-grafana-proxy.py
     python:
-     - "3.6"
-     - "2.7"
+    - '3.6'
+    - '2.7'
   - stage: displayHelp
-    script: ./snow-grafana-proxy.py --help
+    script: "./snow-grafana-proxy.py --help"
     python:
-     - "3.6"
+    - '3.6'
   - stage: startService
-    script: ./snow-grafana-proxy.py -c ./etc/snow-grafana-proxy.conf
+    script: "./snow-grafana-proxy.py -c ./etc/snow-grafana-proxy.conf"
     python:
-     - "2.7"
-     - "3.5"
-     - "3.6"
-
-
+    - '2.7'
+    - '3.5'
+    - '3.6'

@@ -21,7 +21,10 @@ addons:
       name: cinek810/snow-grafana-proxy
       description: Grafana and ServiceNow connector
     notification_email: stolarek.marcin@gmail.com
+    build_command_prepend: ""
+    build_command: ""
     branch_pattern: master
+
 script: "./snow-grafana-proxy.py -c ./etc/snow-grafana-proxy.conf"
 python:
 - '2.7'

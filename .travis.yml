@@ -31,3 +31,20 @@ jobs:
      - "2.7"
      - "3.5"
      - "3.6"
+
+env:
+  global:
+   # The next declaration is the encrypted COVERITY_SCAN_TOKEN, created
+   #   via the "travis encrypt" command using the project repo's public key
+   - secure: "K4e16luMdjMrFOcqeAbUlkIo73lFz7ztEZ9YMomAeHua8pnFTQaTFl77jEgX76vXY+RbOVY+tZGNktNMf7y9K911jKOPeMK5S3tZMbj2mbGCaAeZCu/8lqueGT7wUHBskCawXM2CXiMtW+wwwmtbpP4lCgB6ObrmLH2vQp2YPnaVH23uVRmJXXEziiKhlbAWSeQ9HFahdeQ6wMRiafybqrHqf1vjHMxrNuMdAH1pdQ91IkACOab+vTjDlg19t70WOwo3UKekm1DUqfsYwOcSeG+B4PS3p+du+wRunDR6BtO+aN3SRJqyzs9F0zh5BMiVZd+iT/XCLATO4AB+BFnRmPatMC+MSi4580ULRvlTOavHIXvsuFzQwYLGKJrhwWi10aWyAw4aqljWvSqqutyK9JMH85edxf+U2OCg/mu9OeQDDsb0qfgPI0Ivy/YgjrR7iDfMPQRWzzNzxf8qDOv7jaJ2J5n5pzyB//pIsaihXgJhh8aRxRR4w8sMq9eUOkhhCLfsTm9grSvHGF1FaU7HmgEi5ha5sUDaYgIWG2As1nFoLiypbXdTjhagJuoRN5VM1YNIVmI5WgRh8kP0qqpZok28W8hCa0e5fb1eKbm3T7czNqwp0HDYc20lGLTWB34CmMDgT0S9+u4B+yPI2/ZKDO6EGTk8web/d7lY2g4fHb4="
+
+before_install:
+  - echo -n | openssl s_client -connect https://scan.coverity.com:443 | sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' | sudo tee -a /etc/ssl/certs/ca-
+
+addons:
+  coverity_scan:
+    project:
+      name: "cinek810/snow-grafana-proxy"
+      description: "Grafana and ServiceNow connector"
+    notification_email: stolarek.marcin@gmail.com
+    branch_pattern: master
